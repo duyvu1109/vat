@@ -1,0 +1,40 @@
+.bottom1 {
+    position: fixed !important;
+    right: 90px;
+    bottom: 100px;
+    // pointer-events: none;
+}
+.bottom2 {
+    position: fixed !important;
+    right: 140px;
+    bottom: 100px;
+    // pointer-events: none;
+}
+.ant-layout .p-4 {
+    margin-top: 0px !important;
+}
+.site-layout .site-layout-background {
+    background: #363636;
+    // background-image: conic-gradient(#553c9a, #ee4b2b, #00c2cb, #553c9a);
+}
+body {
+    color: #ffffff !important;
+}
+.title {
+    color: #ffffff !important;
+    font-weight: bold;
+    align-items: stretch;
+    border: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    font: inherit;
+    font-size: 100%;
+    margin: 0 0 0 20px;
+    margin-top: 7px;
+    padding: 0;
+    position: relative;
+    transition: opacity 0.1s ease-out;
+    vertical-align: baseline;
+}

@@ -1,0 +1,56 @@
+.main{
+    width: 700px;
+    border-radius: 15px;
+    background-color: #1086e0;
+}
+
+.header{
+    background-color: #4d3c57;
+    color: whitesmoke;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 12px;
+    font-family: 'Recursive', sans-serif;
+}
+
+.day{
+    padding: 15px;
+    color: black;
+    font-family: 'Recursive', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.temp{
+    padding: 15px;
+    color: black;
+    font-family: 'Recursive', sans-serif;
+    font-size: 18px;
+}
+
+.flex{
+    display: flex;
+    justify-content: space-between;
+}
+
+.sunrise-sunset{
+    padding: 15px;
+    color: black;
+    font-family: 'Recursive', sans-serif;
+    font-size: 18px;
+}
+
+.description{
+    padding: 15px;
+    color: black;
+    font-family: 'Recursive', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.wind{
+    padding: 15px;
+    color: black;
+    font-family: 'Recursive', sans-serif;
+    font-size: 18px;
+}

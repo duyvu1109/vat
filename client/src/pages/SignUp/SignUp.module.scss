@@ -1,0 +1,110 @@
+.center-form-create {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: rgb(250, 251, 252);
+    background-image: url(https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.412/static/media/default_left.e74de3ec.svg),
+        url(https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.412/static/media/default_right.6ece9751.svg);
+    background-repeat: no-repeat, no-repeat;
+    background-attachment: fixed, fixed;
+    background-size: 368px, 368px;
+    background-position: left bottom, right bottom;
+}
+.card-login {
+    width: 590px;
+    height: 600px;
+    box-shadow: 0px 10px 13px -6px rgb(0 0 0 / 20%), 0px 20px 31px 3px rgb(0 0 0 / 14%),
+        0px 8px 38px 7px rgb(0 0 0 / 12%);
+}
+.title-login {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.5;
+    text-transform: none;
+    white-space: normal;
+    color: rgb(94, 108, 132);
+}
+.google-login {
+    margin-left: 5px;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1;
+    color: inherit;
+    text-transform: none;
+    font-weight: 600;
+    color: rgb(94, 108, 132);
+}
+.btn-google-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 165px;
+}
+.remember-text {
+    color: #1d2438;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.5;
+    margin-left: 5px;
+}
+.divider-or {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #94a4c4;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-transform: none;
+    white-space: normal;
+}
+.btn-signin {
+    height: 40px;
+    color: #fff;
+    text-transform: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    text-transform: uppercase;
+    min-width: 64px;
+}
+.text-bottom {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: auto;
+    margin-top: 24px;
+    color: #94a4c4;
+    text-transform: none;
+    white-space: normal;
+}
+.forgot-text {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ff6b93;
+    text-transform: none;
+    white-space: normal;
+}
+.text-input {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1;
+    color: inherit;
+    text-transform: none;
+    font-weight: 600;
+    color: rgb(94, 108, 132);
+}

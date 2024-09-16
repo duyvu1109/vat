@@ -1,0 +1,17 @@
+.text {
+    position: fixed;
+    bottom: 300px;
+    right: 230px;
+    width: 250px;
+    // left: 50px;
+    // top: 200px;
+    z-index: 1;
+    color: rgb(75, 75, 98);
+    border-radius: 4px;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    text-transform: uppercase;
+    min-width: 64px;
+}

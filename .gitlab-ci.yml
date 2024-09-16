@@ -1,0 +1,142 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  S3_BUCKET_PROD: iot.hcmut.org
+  EC2_IP: ec2-13-213-62-167
+  S3_BUCKET_STG: stg.iot.hcmut.org
+  build_path: ./client/build
+
+build-frontend:
+  stage: build
+  image: node:19-alpine3.16
+  before_script:
+    - npm -v
+    # - npm update
+    - cd client
+    - cat .env
+  script: 
+    - npm install --force
+    - CI=false  npm run build
+  artifacts:
+    paths:
+      - ${build_path}
+  only:
+    refs:
+      - main
+deploy-frontend-stg:
+  stage: deploy
+  image: python:latest
+  # when: manual
+  script: 
+    - pip install awscli
+    - aws s3 cp ${build_path}/ s3://${S3_BUCKET_STG} --recursive
+  dependencies:
+    - build-frontend
+  only:
+    refs:
+      - main
+
+.deploy-frontend-prod:
+  stage: deploy
+  image: python:latest
+  when: manual
+  script: 
+    - pip install awscli
+    - aws s3 cp ${build_path}/ s3://${S3_BUCKET} --recursive
+  dependencies:
+    - build_frontend
+  only:
+    refs:
+      - main
+
+build-backend:
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  stage: build
+  before_script:
+    - cd server/backend
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker build -t registry.gitlab.com/nct74/vat-server:$CI_COMMIT_SHORT_SHA --no-cache .
+    - docker push registry.gitlab.com/nct74/vat-server:$CI_COMMIT_SHORT_SHA
+  only:
+    refs:
+      - main
+
+deploy-backend-stg:
+  stage: deploy
+  tags:
+    - shell-runner
+  before_script:
+    - echo $PWD
+    - eval $(ssh-agent -s)
+    - echo $SSH_PRIVATE_KEY
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+  script:
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker stop vatbe-stg && docker container prune -f"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker pull registry.gitlab.com/nct74/vat-server:$CI_COMMIT_SHORT_SHA"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker run --name vatbe-stg -p 8001:8001 registry.gitlab.com/nct74/vat-server:$CI_COMMIT_SHORT_SHA"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "exit"
+  only:
+    refs:
+      - main
+
+.deploy-backend-prod:
+  stage: deploy
+  tags:
+    - shell-runner
+  before_script:
+    - echo $PWD
+    - eval $(ssh-agent -s)
+    - echo $SSH_PRIVATE_KEY
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+  script:
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker ps -aq | xargs docker stop | xargs docker rm || true"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker pull registry.gitlab.com/nct74/vat-server:$CI_COMMIT_SHORT_SHA"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker run --name vatbe -p 8000:8000 registry.gitlab.com/nct74/vat-server:$CI_COMMIT_SHORT_SHA"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "exit"
+  only:
+    refs:
+      - main
+  when: manual
+
+.build-crawler:
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  stage: build
+  before_script:
+    - cd crawler
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker build -t registry.gitlab.com/nct74/vat-server:crawler-$CI_COMMIT_SHORT_SHA .
+    - docker push registry.gitlab.com/nct74/vat-server:crawler-$CI_COMMIT_SHORT_SHA
+  only:
+    refs:
+      - CP-032
+    changes:
+      - /*
+
+.deploy-crawler:
+  stage: deploy
+  tags:
+    - shell-runner
+  before_script:
+    - echo $PWD
+    - eval $(ssh-agent -s)
+    - echo $SSH_PRIVATE_KEY
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+  script:
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker stop crawler"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker pull registry.gitlab.com/nct74/vat-server:crawler-$CI_COMMIT_SHORT_SHA"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "docker run --name crawler registry.gitlab.com/nct74/vat-server:crawler-$CI_COMMIT_SHORT_SHA"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$EC2_IP.$AWS_DEFAULT_REGION.compute.amazonaws.com "exit"
+  only:
+    refs:
+      - CP-032
